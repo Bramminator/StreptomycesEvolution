@@ -41,17 +41,17 @@ int killing_time = 10000;
 int number_sensitives = 1000;
 int killing_period = 0;
 double nastiness = 2.0;
-int wt_seeds = 100;
+int wt_seeds = 15;
 
 
 
 
 char *name;
-char buf[450]; //<-- temp buffer for string
-char folder[450]; //<-- another temp buffer for string
-char gridfolder[450]; //<-- another temp buffer for string
-char costsfolder[450];
-char productionfolder[450];
+char buf[400]; //<-- temp buffer for string
+char folder[400]; //<-- another temp buffer for string
+char gridfolder[400]; //<-- another temp buffer for string
+char costsfolder[400];
+char productionfolder[400];
 // char name[30] = "data";
 void Initial(void)
 {
@@ -206,6 +206,11 @@ void InitialPlane(void)
 				Medium[row][col].val = 2;
 				Medium[row][col].fval = neighbor.fval;
         Medium[row][col].fval2 = neighbor.fval2;
+        if(genrand_real1() < 0.2){
+          Medium[row][col].fval4 = 1;
+        } else{
+          Medium[row][col].fval4 = 0;
+        }
         if(genrand_real1() < mut_rate_cost){ // cost parameter mutates
           Medium[row][col].fval += mut_step_cost * (genrand_real2()/10 - 0.05);
             if(Medium[row][col].fval < minimum_cost){
@@ -242,7 +247,7 @@ void InitialPlane(void)
     }
 
 
-    if(Medium[row][col].val == 2){
+    if(Medium[row][col].val == 2 && Medium[row][col].fval4 == 1){
 
   		Diffusion_plane[row][col].fval += Medium[row][col].fval2;
     }
