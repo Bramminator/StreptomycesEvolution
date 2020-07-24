@@ -247,7 +247,7 @@ void InitialPlane(void)
     }
 
 
-    if(Medium[row][col].val == 2 && Medium[row][col].fval4 == 1){
+    if(Medium[row][col].val == 2 && Medium[row][col].fval4 > 0.5){
 
   		Diffusion_plane[row][col].fval += Medium[row][col].fval2;
     }
