@@ -41,17 +41,17 @@ int killing_time = 10000;
 int number_sensitives = 1000;
 int killing_period = 0;
 double nastiness = 2.0;
-int wt_seeds = 15;
+int wt_seeds = 100;
 
 
 
 
 char *name;
-char buf[400]; //<-- temp buffer for string
-char folder[400]; //<-- another temp buffer for string
-char gridfolder[400]; //<-- another temp buffer for string
-char costsfolder[400];
-char productionfolder[400];
+char buf[450]; //<-- temp buffer for string
+char folder[450]; //<-- another temp buffer for string
+char gridfolder[450]; //<-- another temp buffer for string
+char costsfolder[450];
+char productionfolder[450];
 // char name[30] = "data";
 void Initial(void)
 {
@@ -286,12 +286,12 @@ void Update(void)
 
 
     int counter = 0;
-    int arr_x[15];
-    int arr_y[15];
-    int arr_type[15];
-    double arr_cost[15];
-    double arr_production[15];
-    double arr_mutation[15];
+    int arr_x[wt_seeds];
+    int arr_y[wt_seeds];
+    int arr_type[wt_seeds];
+    double arr_cost[wt_seeds];
+    double arr_production[wt_seeds];
+    double arr_mutation[wt_seeds];
     while(counter < wt_seeds){
       int x = genrand_int(1, nrow);
       int y = genrand_int(1, nrow);
