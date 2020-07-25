@@ -144,8 +144,6 @@ void InitialPlane(void)
 
 			else {
 				Medium[row][col].val = 2;
-				Medium[row][col].fval = neighbor.fval;
-        Medium[row][col].fval2 = neighbor.fval2;
       }
     }
   }
@@ -215,7 +213,7 @@ void Update(void)
     while(counter < wt_seeds){
       int x = genrand_int(1, nrow);
       int y = genrand_int(1, nrow);
-      if(Medium[x][y].val == 1 || Medium[x][y].val == 2){
+      if(Medium[x][y].val == 1 || Medium[x][y].val == 4){
         arr_x[counter] = x;
         arr_y[counter] = y;
         arr_type[counter] = Medium[x][y].val;
@@ -226,6 +224,8 @@ void Update(void)
 		for(i=1;i<=nrow;i++)
 		for(j=1;j<=ncol;j++){
       Diffusion_plane[i][j].fval = 0;
+      if(Medium[i][j].val == 5) Medium[i][j] = empty;
+      if(Medium[i][j].val == 4) Medium[i][j] = empty;
       if(Medium[i][j].val == 3) Medium[i][j] = empty;
       if(Medium[i][j].val == 2) Medium[i][j] = empty;
       if(Medium[i][j].val == 1) Medium[i][j] = empty;
