@@ -101,7 +101,7 @@ void Initial(void)
   if(success == -1){
     printf("Error in system call to make costs dir...\n"); exit(0);}
 
-	MaxTime = 1000000;
+	MaxTime = 100000;
 	nrow = 400;
 	ncol = 400;
 	nplane =4;
@@ -206,20 +206,36 @@ void Update(void)
     PerfectMix(Medium);
 
 
-    int counter = 0;
-    int arr_x[wt_seeds];
-    int arr_y[wt_seeds];
-    int arr_type[wt_seeds];
-    while(counter < wt_seeds){
+    int counter1 = 0;
+    int arr_x1[wt_seeds];
+    int arr_y1[wt_seeds];
+    int arr_type1[wt_seeds];
+    while(counter1 < wt_seeds){
       int x = genrand_int(1, nrow);
       int y = genrand_int(1, nrow);
-      if(Medium[x][y].val == 1 || Medium[x][y].val == 4){
-        arr_x[counter] = x;
-        arr_y[counter] = y;
-        arr_type[counter] = Medium[x][y].val;
-        counter +=1;
+      if(Medium[x][y].val == 1 || Medium[x][y].val == 2 ){
+        arr_x1[counter1] = x;
+        arr_y1[counter1] = y;
+        arr_type1[counter1] = Medium[x][y].val;
+        counter1 +=1;
       }
     }
+
+    int counter2 = 0;
+    int arr_x2[wt_seeds];
+    int arr_y2[wt_seeds];
+    int arr_type2[wt_seeds];
+    while(counter2 < wt_seeds){
+      int x = genrand_int(1, nrow);
+      int y = genrand_int(1, nrow);
+      if(Medium[x][y].val == 4 || Medium[x][y].val == 5){
+        arr_x2[counter2] = x;
+        arr_y2[counter2] = y;
+        arr_type2[counter2] = Medium[x][y].val;
+        counter2 +=1;
+      }
+    }
+
     int i, j;
 		for(i=1;i<=nrow;i++)
 		for(j=1;j<=ncol;j++){
@@ -231,12 +247,14 @@ void Update(void)
       if(Medium[i][j].val == 1) Medium[i][j] = empty;
     }
     for(i=0;i<=wt_seeds-1;i++){
-      if(arr_type[i] == 1){
-        Medium[arr_x[i]][arr_y[i]].val = 1;
+      if(arr_type1[i] == 1){
+        Medium[arr_x1[i]][arr_y1[i]].val = 1;
       }
-      if(arr_type[i] == 4){
-        Medium[arr_x[i]][arr_y[i]].val = 4;
-        }
+    }
+    for(i=0;i<=wt_seeds-1;i++){
+      if(arr_type2[i] == 4){
+        Medium[arr_x2[i]][arr_y2[i]].val = 4;
+      }
     }
 
     PerfectMix(Medium);
@@ -254,17 +272,19 @@ void Update(void)
 
 
   FILE *populationfile;
-  if(Time%2500 == 0){
+  if(Time%1000 == 0){
     char populationbuffer[400];
     sprintf(populationbuffer,"%s/popsize2.txt",folder);    //T=1000 "/linuxhome/tmp/brem/Hierzo/grid_at_time_1000.dat"
     populationfile = fopen(populationbuffer, "a");
     if(Time == 0){
-      fprintf(populationfile, "Time\tPopulation_wildtype\tPopulation_mutants\tsensitives");
+      fprintf(populationfile, "Time\tPopulation_wildtype\tPopulation_mutants\tsensitives\tpop_WT2\tpop_mutant2");
       fprintf(populationfile, "\n");}
-    int pop_WT = countGlobal(Medium, 1);
-    int pop_mutant = countGlobal(Medium, 2);
+    int pop_WT1 = countGlobal(Medium, 1);
+    int pop_mutant1 = countGlobal(Medium, 2);
     int pop_sensitive = countGlobal(Medium, 3);
-    fprintf(populationfile, "%d\t%d\t%d\t%d\n", Time, pop_WT, pop_mutant, pop_sensitive);
+    int pop_WT2 = countGlobal(Medium, 4);
+    int pop_mutant2 = countGlobal(Medium, 5);
+    fprintf(populationfile, "%d\t%d\t%d\t%d\t%d\t%d\n", Time, pop_WT1, pop_mutant1, pop_sensitive, pop_WT2, pop_mutant2);
     fclose(populationfile);
   }
 
