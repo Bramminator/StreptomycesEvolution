@@ -138,7 +138,7 @@ void InitialPlane(void)
 
    if(Medium[row][col].val == 0 && neighbor.val == 1){
      if(genrand_real1() < growthrate){
-       if(genrand_real1() > rearrangement_rate_s2){ // WT reproduction
+       if(genrand_real1() > rearrangement_rate_s1){ // WT reproduction
          Medium[row][col] = neighbor;
       }
 
