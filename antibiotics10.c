@@ -166,6 +166,12 @@ void InitialPlane(void)
     }
   }
 
+  if(Medium[row][col].val == 0 && neighbor.val == 5){
+    if(genrand_real1() < (growthrate - cost_s2)){
+      Medium[row][col] = neighbor;
+    }
+  }
+
 
   if(Medium[row][col].val == 1 || Medium[row][col].val == 2 || Medium[row][col].val == 4 || Medium[row][col].val == 5){
 
