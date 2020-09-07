@@ -106,7 +106,7 @@ void Initial(void)
   if(success == -1){
     printf("Error in system call to make costs dir...\n"); exit(0);}
 
-	MaxTime = 200000;
+	MaxTime = 96000000;
 	nrow = 400;
 	ncol = 400;
 	nplane =4;
@@ -131,9 +131,11 @@ void InitialPlane(void)
 		s1.fval = initial_cost;
     s1.fval2 = initial_production;
     s1.fval3 = initial_rearrangement_rate;
+    s1.fval4 = 0.;
 		s2.fval = 0.;
     s2.fval2 = 0.;
     s2.fval3 = 0.;
+    s2.fval4 = 0.;
     s3.fval = 0.;
     s3.fval2 = 0.;
     s3.fval3 = 0.;
@@ -206,6 +208,11 @@ void InitialPlane(void)
 				Medium[row][col].val = 2;
 				Medium[row][col].fval = neighbor.fval;
         Medium[row][col].fval2 = neighbor.fval2;
+        if(genrand_real1() < 0.2){
+          Medium[row][col].fval4 = 1;
+        } else{
+          Medium[row][col].fval4 = 0;
+        }
         if(genrand_real1() < mut_rate_cost){ // cost parameter mutates
           Medium[row][col].fval += mut_step_cost * (genrand_real2()/10 - 0.05);
             if(Medium[row][col].fval < minimum_cost){
@@ -240,13 +247,12 @@ void InitialPlane(void)
   	if(genrand_real1() < death){
   		Medium[row][col] = empty;
     }
+  }
 
-
-    if(Medium[row][col].val == 2){
+  if(Medium[row][col].val == 2 && Medium[row][col].fval4 > 0){
 
   		Diffusion_plane[row][col].fval += Medium[row][col].fval2;
     }
-  }
 
 
 if(Medium[row][col].val == 0 && neighbor.val == 3){
@@ -286,12 +292,13 @@ void Update(void)
 
 
     int counter = 0;
-    int arr_x[15];
-    int arr_y[15];
-    int arr_type[15];
-    double arr_cost[15];
-    double arr_production[15];
-    double arr_mutation[15];
+    int arr_x[wt_seeds];
+    int arr_y[wt_seeds];
+    int arr_type[wt_seeds];
+    double arr_cost[wt_seeds];
+    double arr_production[wt_seeds];
+    double arr_mutation[wt_seeds];
+    double arr_produces[wt_seeds];
     while(counter < wt_seeds){
       int x = genrand_int(1, nrow);
       int y = genrand_int(1, nrow);
@@ -302,8 +309,10 @@ void Update(void)
         arr_production[counter] = Medium[x][y].fval2;
         arr_type[counter] = Medium[x][y].val;
         arr_mutation[counter] = Medium[x][y].fval3;
+        arr_produces[counter] = Medium[x][y].fval4;
         counter +=1;
       }
+
     }
     int i, j;
 		for(i=1;i<=nrow;i++)
@@ -318,6 +327,7 @@ void Update(void)
       Medium[arr_x[i]][arr_y[i]].fval = arr_cost[i];
       Medium[arr_x[i]][arr_y[i]].fval2 = arr_production[i];
       Medium[arr_x[i]][arr_y[i]].fval3 = arr_mutation[i];
+      Medium[arr_x[i]][arr_y[i]].fval4 = arr_produces[i];
     }
 
 
@@ -394,7 +404,7 @@ void Update(void)
   }
 
     FILE *valfile;
-    if(Time%2500 ==0)
+    if(Time%1000000-2500 ==0 || Time%1000000-5000==0 || Time%1000000-7500==0)
     {
       char valbuffer[400];
       sprintf(valbuffer,"%s/grid_type%d.txt", gridfolder, Time);
@@ -411,7 +421,7 @@ void Update(void)
     }
 
       FILE *evolutionfile;
-      if(Time%2500 ==0)
+      if(Time%1000000-2500 ==0 || Time%1000000-5000==0 || Time%1000000-7500==0)
       {
         char evolutionbuffer[400];
         sprintf(evolutionbuffer,"%s/grid_costs%d.txt", costsfolder, Time);
@@ -428,7 +438,7 @@ void Update(void)
       }
 
       FILE *productionfile;
-      if(Time%2500 ==0)
+      if(Time%1000000-2500 ==0 || Time%1000000-5000==0 || Time%1000000-7500==0)
       {
         char productionbuffer[400];
         sprintf(productionbuffer,"%s/grid_production%d.txt", costsfolder, Time);
@@ -446,7 +456,7 @@ void Update(void)
 
 
     FILE *rearrangement_file;
-    if(Time%2500 ==0)
+    if(Time%1000000-2500 ==0 || Time%1000000-5000==0 || Time%1000000-7500==0)
     {
       char mutationbuffer[400];
       sprintf(mutationbuffer,"%s/grid_mut%d.txt", costsfolder, Time);
